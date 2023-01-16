@@ -1,20 +1,19 @@
-# fly.toml file generated for da-course on 2022-11-18T12:14:21+07:00
+# fly.toml file generated for datingappmax on 2023-01-15T23:55:21+03:00
 
-app = "da-course"
+app = "datingappmax"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
 [build]
-  image = "trycatchlearn/datingapp:latest"
+  image = "zormax/datingapp:latest"
 
 [env]
   ASPNETCORE_URLS="http://+:8080"
-  CloudinarySettings__CloudName="dj3wmuy3l"
-  CloudinarySettings__ApiKey="895484589483755"
+  CloudinarySettings__CloudName="dfdggu77v"
+  CloudinarySettings__ApiKey="118373357324195"
 
 [experimental]
-  allowed_public_ports = []
   auto_rollback = true
 
 [[services]]

@@ -26,7 +26,7 @@ jobs:
         with:
           context: "{{defaultContext}}:API"
           push: true
-          tags: trycatchlearn/datingapp:latest
+          tags: zormax/datingapp:latest
   deploy:
       needs: docker
       name: Deploy app
