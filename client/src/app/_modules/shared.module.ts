@@ -9,6 +9,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { TimeagoModule } from "ngx-timeago";
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 @NgModule({
   declarations: [],
@@ -18,6 +19,7 @@ import { TimeagoModule } from "ngx-timeago";
     PaginationModule.forRoot(),
     ButtonsModule.forRoot(),
     TabsModule.forRoot(),
+    ModalModule.forRoot(),
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right'
     }),
@@ -37,7 +39,8 @@ import { TimeagoModule } from "ngx-timeago";
     BsDatepickerModule,
     PaginationModule,
     ButtonsModule,
-    TimeagoModule
+    TimeagoModule,
+    ModalModule
   ]
 })
 export class SharedModule { }
