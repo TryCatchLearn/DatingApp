@@ -19,6 +19,7 @@
     "@angular/platform-browser": "^16.1.0",
     "@angular/platform-browser-dynamic": "^16.1.0",
     "@angular/router": "^16.1.0",
+    "@microsoft/signalr": "^7.0.9",
     "bootstrap": "^5.2.3",
     "bootswatch": "^5.3.1",
     "font-awesome": "^4.7.0",
