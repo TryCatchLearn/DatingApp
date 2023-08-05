@@ -1,0 +1,23 @@
+# fly.toml app configuration file generated for da-course on 2023-08-05T11:40:06+07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "da-course"
+primary_region = "sin"
+
+[build]
+  image = "trycatchlearn/datingapp:latest"
+
+[env]
+  ASPNETCORE_URLS="http://+:8080"
+  CloudinarySettings__CloudName="dj3wmuy3l"
+  CloudinarySettings__ApiKey="895484589483755"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
