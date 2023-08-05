@@ -12,10 +12,6 @@ public static class ApplicationServiceExtensions
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
     {
         services.AddScoped<ITokenService, TokenService>();
-        services.AddDbContext<DataContext>(opt =>
-        {
-            opt.UseNpgsql(config.GetConnectionString("DefaultConnection"));
-        });
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
         services.AddScoped<IPhotoService, PhotoService>();
