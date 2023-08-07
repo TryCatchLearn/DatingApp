@@ -9,9 +9,9 @@ public class PresenceTracker
         bool isOnline = false;
         lock (OnlineUsers)
         {
-            if (OnlineUsers.ContainsKey(username))
+            if (OnlineUsers.TryGetValue(username, out var user))
             {
-                OnlineUsers[username].Add(connectionId);
+                user.Add(connectionId);
             }
             else
             {
