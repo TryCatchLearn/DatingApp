@@ -13,7 +13,10 @@
           <a class="nav-link" routerLink="/messages" routerLinkActive="active">Mesages</a>
         </li>
       </ng-container>
-    </ul>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/errors" routerLinkActive="active">Errors</a>
+      </li>
+  </ul>
     <div *ngIf="(accountService.currentUser$ | async) as user" class="dropdown" dropdown>
       <a class="dropdown-toggle text-light text-decoration-none" dropdownToggle>Welcome {{user.username | titlecase}}</a>
       <div class="dropdown-menu" *dropdownMenu>

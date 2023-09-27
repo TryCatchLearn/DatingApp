@@ -77,6 +77,16 @@ namespace API.Controllers {
         {
             return await _context.Users.AnyAsync(u => u.UserName == userName.ToLower());
         }
+
+        [HttpGet("blowchunks")]
+        public ActionResult<UserDto> BlowChunks()
+        {
+            var a = new UserDto[0];
+
+            var user = a[1];
+
+            return user;
+        }
     }
 
 }
