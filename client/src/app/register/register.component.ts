@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AccountService } from '../services/account.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -9,13 +10,15 @@ import { AccountService } from '../services/account.service';
 export class RegisterComponent {
   model: any = {}
 
-  constructor(private accountService: AccountService) {}
+  constructor(
+    private accountService: AccountService,
+    private toastrService: ToastrService
+  ) {}
 
   register() {
     this.accountService.register(this.model).subscribe({
-      next: response => {
-        console.log({ response })
-      }
+      next: response => console.log({ response }),
+      error: err => this.toastrService.error(err.message)
     })
   }
 
