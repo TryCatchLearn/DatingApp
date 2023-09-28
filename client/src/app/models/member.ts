@@ -11,6 +11,7 @@ export interface Member {
   gender: string
   lookingFor: string
   interests: string
+  introduction: string
   city: string
   state: any
   country: string
