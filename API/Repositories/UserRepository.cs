@@ -54,6 +54,11 @@ public class UserRepository : IUserRepository
             .ToListAsync();
     }
 
+    public async Task AddUserAsync(AppUser user)
+    {
+        await _context.AddAsync(user);
+    }
+
     public async Task<bool> SaveAllAsync()
     {
         return await _context.SaveChangesAsync() > 0;

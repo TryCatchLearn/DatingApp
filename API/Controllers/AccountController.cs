@@ -10,13 +10,13 @@ using API.Interfaces;
 namespace API.Controllers {
     public class AccountController : BaseApiController
     {
-        private readonly DataContext _context;
         private readonly ITokenService _tokenService;
+        private readonly IUserRepository _userRepository;
 
-        public AccountController(DataContext context, ITokenService tokenService)
+        public AccountController(ITokenService tokenService, IUserRepository userRepository)
         {
-            _context = context;
             _tokenService = tokenService;
+            _userRepository = userRepository;
         }
 
         [HttpPost("register")]
@@ -36,9 +36,9 @@ namespace API.Controllers {
                 PasswordSalt = hmac.Key
             };
 
-            _context.Users.Add(user);
+            await _userRepository.AddUserAsync(user);
 
-            await _context.SaveChangesAsync();
+            await _userRepository.SaveAllAsync();
 
             return new UserDto
             {
@@ -49,7 +49,7 @@ namespace API.Controllers {
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto data)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.UserName == data.UserName.ToLower());
+            var user = await _userRepository.GetUserByUserNameAsync(data.UserName.ToLower());
 
             if (user == null)
             {
@@ -69,13 +69,16 @@ namespace API.Controllers {
             return new UserDto
             {
                 Username = user.UserName,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
             };
         }
 
         private async Task<bool> UserExists(string userName)
         {
-            return await _context.Users.AnyAsync(u => u.UserName == userName.ToLower());
+            var user = await _userRepository.GetUserByUserNameAsync(userName.ToLower());
+
+            return user != null;
         }
 
         [HttpGet("blowchunks")]
