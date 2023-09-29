@@ -20,6 +20,13 @@ export class MembersService {
     private http: HttpClient,
     private accountService: AccountService
   ) {
+    this.accountService.currentUser$.subscribe({
+      next: user => {
+        if (user) {
+          this.userParams = new UserParams(user)
+        }
+      }
+    })
     this.resetUserParams()
   }
 
@@ -59,12 +66,6 @@ export class MembersService {
 
   updateMember(member: Member) {
     return this.http.put(`${this.baseUrl}users`, member)
-    // .pipe(
-    //   map(() => {
-    //     const index = this.members.indexOf(member)
-    //     this.members[index] = {...this.members[index], ...member}
-    //   })
-    // )
   }
 
   setMainPhoto(photoId: number) {
@@ -94,4 +95,13 @@ export class MembersService {
     );
   }
 
+  addLike(username: string) {
+    return this.http.post(`${this.baseUrl}likes/${username}`, {})
+  }
+
+  getLikes(predicate: string, pageNumber: number, pageSize: number) {
+    const params = new HttpParams({ fromObject: {predicate, pageNumber, pageSize} })
+
+    return this.getPaginatedResult<Member[]>(`${this.baseUrl}likes`, params)
+  }
 }

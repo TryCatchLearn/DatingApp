@@ -4,7 +4,7 @@
     <ul class="list-inline member-icons animate text-center">
       <li class="list-inline-item">
         <button class="btn btn-primary" routerLink="/members/{{member.userName}}"><i class="fa fa-user"></i></button>
-        <button class="btn btn-primary"><i class="fa fa-heart"></i></button>
+        <button class="btn btn-primary" (click)="addLike(member)"><i class="fa fa-heart"></i></button>
         <button class="btn btn-primary"><i class="fa fa-envelope"></i></button>
       </li>
     </ul>
