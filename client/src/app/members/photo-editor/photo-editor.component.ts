@@ -15,12 +15,12 @@ import { environment } from 'src/environments/environment';
 })
 export class PhotoEditorComponent implements OnInit {
   @Input()
-  member: Member | undefined
+  member?: Member
 
-  uploader: FileUploader | undefined
+  uploader?: FileUploader
   hasBaseDropZoneOver = false
   baseUrl = environment.apiUrl
-  user: User | undefined
+  user?: User
 
   constructor(
     private accountService: AccountService,
@@ -58,8 +58,12 @@ export class PhotoEditorComponent implements OnInit {
 
     this.uploader.onSuccessItem = (item, response, status, headers) => {
       if (response) {
-        const photo = JSON.parse(response)
+        const photo: Photo = JSON.parse(response)
         this.member?.photos.push(photo)
+        if (photo.isMain) {
+          if (this.member) this.member.photoUrl = photo.url
+          if (this.user) this.user.photoUrl = photo.url
+        }
       }
     }
   }

@@ -42,7 +42,15 @@ export class AccountService {
   }
 
   setCurrentUser(user: User) {
+    user.roles = []
+    const roles = this.getDecodedToken(user.token).role
+    Array.isArray(roles) ? user.roles = roles : [roles]
+
     localStorage.setItem('user', JSON.stringify(user))
     this.currentUserSource.next(user)
+  }
+
+  getDecodedToken(token: string) {
+    return JSON.parse(atob(token.split('.')[1]))
   }
 }
