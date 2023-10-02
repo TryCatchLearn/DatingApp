@@ -82,29 +82,20 @@ public class MessageRepository : IMessageRepository
 
     public async Task<IEnumerable<MessageDto>> GetMessageThread(string currentUserName, string recipientUserName)
     {
-        var messages = await _context.Messages
-            .Include(m => m.Sender).ThenInclude(s => s.Photos)
+        var query = _context.Messages
             .Where(m => (m.RecipientUserName == currentUserName && !m.RecipientDeleted &&
                          m.SenderUserName == recipientUserName) ||
                         (m.RecipientUserName == recipientUserName && !m.SenderDeleted &&
                          m.SenderUserName == currentUserName))
-            .OrderBy(m => m.DateMessageSent)
+            .OrderBy(m => m.DateMessageSent);
+
+        await query
+            .Where(m => m.DateRead == null && m.RecipientUserName == currentUserName)
+            .ForEachAsync(m => m.DateRead = DateTime.UtcNow);
+
+        return await query
+            .ProjectTo<MessageDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
-        var unreadMessages = messages.Where(
-            m => m.DateRead == null &&
-            m.RecipientUserName == currentUserName).ToList();
-
-        if (unreadMessages.Any())
-        {
-            foreach (var unreadMessage in unreadMessages)
-            {
-                unreadMessage.DateRead = DateTime.UtcNow;
-            }
-
-            await _context.SaveChangesAsync();
-        }
-
-        return _mapper.Map<IEnumerable<MessageDto>>(messages);
     }
 
     public void RemoveConnection(Connection connection)

@@ -3,7 +3,9 @@
     <div *ngIf="(messageService.messageThread$ | async)?.length === 0">
       No messages yet... say hi using the message box below
     </div>
-    <ul class="chat" *ngIf="(messageService.messageThread$ | async)!.length > 0">
+    <ul #scrollMe class="chat" style="overflow: scroll; height: 500px;"
+      [scrollTop]="scrollMe.scrollHeight"
+      *ngIf="(messageService.messageThread$ | async)!.length > 0">
       <li *ngFor="let message of (messageService.messageThread$ | async)">
         <div>
           <span class="chat-img float-end">

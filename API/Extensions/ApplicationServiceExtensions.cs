@@ -15,14 +15,12 @@ public static class ApplicationServiceExtensions
         services.AddDbContext<DataContext>(opt => {
             opt.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
         });
-        services.AddScoped<ITokenService, TokenService>();
-        services.AddScoped<IUserRepository, UserRepository>();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<ITokenService, TokenService>();
         services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
         services.AddScoped<IPhotoService, PhotoService>();
         services.AddScoped<LogUserActivity>();
-        services.AddScoped<ILikesRepository, LikesRepository>();
-        services.AddScoped<IMessageRepository, MessageRepository>();
         services.AddSignalR();
         services.AddSingleton<IPresenceRepository, PresenceRepository>();
 

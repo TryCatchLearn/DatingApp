@@ -8,13 +8,11 @@ namespace API.Controllers;
 
 public class LikesController : BaseApiController
 {
-    private readonly IUserRepository _userRepository;
-    private readonly ILikesRepository _likesRespository;
+    private readonly IUnitOfWork _uow;
 
-    public LikesController(IUserRepository userRepository, ILikesRepository likesRespository)
+    public LikesController(IUnitOfWork uow)
     {
-        _userRepository = userRepository;
-        _likesRespository = likesRespository;
+        _uow = uow;
     }
 
     [HttpPost("{username}")]
@@ -22,13 +20,13 @@ public class LikesController : BaseApiController
     {
         var sourceUserId = User.GetUserId().Value;
 
-        var likedUser = await _userRepository.GetUserByUserNameAsync(username);
+        var likedUser = await _uow.UserRepository.GetUserByUserNameAsync(username);
         if (likedUser == null) return NotFound();
 
-        var sourceUser = await _likesRespository.GetUserWithLikes(sourceUserId);
+        var sourceUser = await _uow.LikesRepository.GetUserWithLikes(sourceUserId);
         if (sourceUser.UserName == username) return BadRequest("You cannot like yourself");
 
-        var userLike = await _likesRespository.GetUserLike(sourceUserId, likedUser.Id);
+        var userLike = await _uow.LikesRepository.GetUserLike(sourceUserId, likedUser.Id);
         if (userLike != null) return BadRequest("You already like this user");
 
         userLike = new UserLike
@@ -38,7 +36,7 @@ public class LikesController : BaseApiController
         };
 
         sourceUser.LikedUsers.Add(userLike);
-        if (!await _userRepository.SaveAllAsync()) return BadRequest("Failed to like user");
+        if (!await _uow.Complete()) return BadRequest("Failed to like user");
 
         return Ok();
     }
@@ -48,7 +46,7 @@ public class LikesController : BaseApiController
     {
         likesParams.UserId = User.GetUserId().Value;
 
-        var users = await _likesRespository.GetUserLikes(likesParams);
+        var users = await _uow.LikesRepository.GetUserLikes(likesParams);
 
         Response.AddPaginationHeader(new PaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages));
 
