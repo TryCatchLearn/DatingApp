@@ -1,4 +1,6 @@
-﻿using API.Entities;
+﻿using API.DTOs;
+using API.Entities;
+using API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +11,12 @@ namespace API.Controllers;
 public class AdminController : BaseApiController
 {
     private readonly UserManager<AppUser> _userManager;
+    private readonly IUnitOfWork _uow;
 
-    public AdminController(UserManager<AppUser> userManager)
+    public AdminController(UserManager<AppUser> userManager, IUnitOfWork uow)
     {
         _userManager = userManager;
+        _uow = uow;
     }
 
     [Authorize(Policy = "RequireAdminRole")]
@@ -55,8 +59,41 @@ public class AdminController : BaseApiController
 
     [Authorize(Policy = "ModeratePhotoRole")]
     [HttpGet("photos-to-moderate")]
-    public ActionResult GetPhotosToModerate()
+    public async Task<ActionResult<List<PhotoDto>>> GetPhotosToModerate()
     {
-        return Ok("Admins or moderators can see this");
+        return Ok(await _uow.PhotoRepository.GetWaitingForApproval());
+    }
+
+    [Authorize(Policy = "ModeratePhotoRole")]
+    [HttpPut("approve-photo/{id}")]
+    public async Task<ActionResult> ApprovePhoto(int id)
+    {
+        var photo = await _uow.PhotoRepository.GetById(id);
+        if (photo == null) return NotFound();
+
+        photo.IsApproved = true;
+        var hasMain = await _uow.PhotoRepository.HasMain(photo.AppUserId);
+        if (!hasMain)
+        {
+            photo.IsMain = true;
+        }
+
+        if (!await _uow.Complete()) return BadRequest("Problem approving photo");
+
+        return Ok();
+    }
+
+    [Authorize(Policy = "ModeratePhotoRole")]
+    [HttpPut("delete-photo/{id}")]
+    public async Task<ActionResult<Photo>> DeletePhoto(int id)
+    {
+        var photo = await _uow.PhotoRepository.GetById(id);
+        if (photo == null) return NotFound();
+        if (photo.IsMain) return BadRequest("Main photo cannot be deleted");
+
+        _uow.PhotoRepository.Delete(photo);
+        if (!await _uow.Complete()) return BadRequest("Problem deleting photo");
+
+        return Ok(photo);
     }
 }

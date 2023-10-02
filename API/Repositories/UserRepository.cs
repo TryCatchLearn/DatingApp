@@ -20,9 +20,10 @@ public class UserRepository : IUserRepository
         _mapper = mapper;
     }
 
-    public async Task<MemberDto> GetMemberAsync(string username)
+    public async Task<MemberDto> GetMemberAsync(string username, bool isCurrentUser)
     {
         return await _context.Users
+            .Include(u => u.Photos.Where(p => p.IsApproved || isCurrentUser))
             .Where(u => u.UserName == username)
             .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
             .SingleOrDefaultAsync();
@@ -31,6 +32,8 @@ public class UserRepository : IUserRepository
     public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
     {
         var query = _context.Users.AsQueryable();
+
+        query = query.Include(u => u.Photos.Where(p => p.IsApproved));
 
         query = query.Where(u => u.UserName != userParams.CurrentUsername);
         query = query.Where(u => u.Gender == userParams.Gender);
@@ -57,14 +60,14 @@ public class UserRepository : IUserRepository
     public async Task<AppUser> GetUserByUserNameAsync(string username)
     {
         return await _context.Users
-            .Include(u => u.Photos)
+            .Include(u => u.Photos.Where(p => p.IsApproved))
             .FirstOrDefaultAsync(u => u.UserName == username);
     }
 
     public async Task<IEnumerable<AppUser>> GetUsersAsync()
     {
         return await _context.Users
-            .Include(u => u.Photos)
+            .Include(u => u.Photos.Where(p => p.IsApproved))
             .ToListAsync();
     }
 

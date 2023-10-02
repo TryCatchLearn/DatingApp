@@ -2,10 +2,11 @@
   <div class="col-2 mb-1" *ngFor="let photo of member.photos">
     <img src="{{photo.url}}" alt="photo of user" class="img-thumbnail mb-1">
     <div class="text-center">
-      <button class="btn btn-sm"
+      <button class="btn btn-sm" *ngIf="photo.isApproved"
         [disabled]="photo.isMain"
         (click)="setMainPhoto(photo)"
         [ngClass]="photo.isMain ? 'btn-success active' : 'btn-outline-success'">Main</button>
+      <button class="btn btn-sm btn-outline-secondary" *ngIf="!photo.isApproved" disabled>Awaiting approval</button>
       <button class="btn btn-sm btn-danger"
         [disabled]="photo.isMain"
         (click)="deletePhoto(photo.id)"
