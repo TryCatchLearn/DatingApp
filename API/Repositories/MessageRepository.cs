@@ -7,7 +7,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace API.Repository;
+namespace API.Repositories;
 
 public class MessageRepository : IMessageRepository
 {
@@ -20,6 +20,11 @@ public class MessageRepository : IMessageRepository
         _mapper = mapper;
     }
 
+    public void AddGroup(Group group)
+    {
+        _context.Groups.Add(group);
+    }
+
     public void AddMessage(Message message)
     {
         _context.Messages.Add(message);
@@ -28,6 +33,19 @@ public class MessageRepository : IMessageRepository
     public void DeleteMessage(Message message)
     {
         _context.Messages.Remove(message);
+    }
+
+    public async Task<Connection> GetConnection(string connectionId)
+    {
+        return await _context.Connections.FindAsync(connectionId);
+    }
+
+    public async Task<Group> GetConnectionGroup(string connectionId)
+    {
+        return await _context.Groups
+            .Include(g => g.Connections)
+            .Where(g => g.Connections.Any(c => c.ConnectionId == connectionId))
+            .FirstOrDefaultAsync();
     }
 
     public async Task<Message> GetMessage(int id)
@@ -55,6 +73,13 @@ public class MessageRepository : IMessageRepository
             .CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
     }
 
+    public async Task<Group> GetMessageGroup(string name)
+    {
+        return await _context.Groups
+            .Include(g => g.Connections)
+            .FirstOrDefaultAsync(g => g.Name == name);
+    }
+
     public async Task<IEnumerable<MessageDto>> GetMessageThread(string currentUserName, string recipientUserName)
     {
         var messages = await _context.Messages
@@ -80,6 +105,11 @@ public class MessageRepository : IMessageRepository
         }
 
         return _mapper.Map<IEnumerable<MessageDto>>(messages);
+    }
+
+    public void RemoveConnection(Connection connection)
+    {
+        _context.Connections.Remove(connection);
     }
 
     public async Task<bool> SaveAllAsync()

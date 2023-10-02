@@ -6,7 +6,7 @@ using API.Helpers;
 using API.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace API.Repository;
+namespace API.Repositories;
 
 public class LikesRepository : ILikesRepository
 {

@@ -1,7 +1,7 @@
 ﻿using API.Data;
 using API.Helpers;
 using API.Interfaces;
-using API.Repository;
+using API.Repositories;
 using API.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +11,7 @@ public static class ApplicationServiceExtensions
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddCors();
         services.AddDbContext<DataContext>(opt => {
             opt.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
         });
@@ -22,6 +23,8 @@ public static class ApplicationServiceExtensions
         services.AddScoped<LogUserActivity>();
         services.AddScoped<ILikesRepository, LikesRepository>();
         services.AddScoped<IMessageRepository, MessageRepository>();
+        services.AddSignalR();
+        services.AddSingleton<IPresenceRepository, PresenceRepository>();
 
         return services;
     }
