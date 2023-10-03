@@ -7,6 +7,7 @@ import { HubConnection, HubConnectionBuilder, HubConnectionState, LogLevel } fro
 import { User } from '../models/user';
 import { BehaviorSubject, take } from 'rxjs';
 import { Group } from '../models/group';
+import { BusyService } from './busy.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,10 +21,12 @@ export class MessageService {
   messageThread$ = this.messageThreadSource.asObservable()
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private busyService: BusyService
   ) { }
 
   startConnection(user: User, otherUsername: string) {
+    this.busyService.busy()
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(`${this.hubUrl}message?user=${otherUsername}`, {
         accessTokenFactory: () => user.token
@@ -31,7 +34,10 @@ export class MessageService {
       .withAutomaticReconnect()
       .build()
 
-    this.hubConnection.start().catch(error => console.log(error))
+    this.hubConnection
+      .start()
+      .catch(error => console.log(error))
+      .finally(() => this.busyService.idle())
 
     this.hubConnection.on('UpdatedGroup', (group: Group) => {
       if (group.connections.some(c => c.username === otherUsername)) {
@@ -66,6 +72,7 @@ export class MessageService {
 
   stopConnection() {
     if (this.hubConnection?.state === HubConnectionState.Connected) {
+      this.messageThreadSource.next([])
       this.hubConnection.stop()
     }
   }

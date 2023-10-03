@@ -2,6 +2,12 @@ name: docker-push
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
 jobs:
   docker:
@@ -23,3 +29,11 @@ jobs:
           context: "{{defaultContext}}:API"
           push: true
           tags: sluggo74/dating-app:latest
+  deploy:
+    needs: docker
+    name: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy --remote-only

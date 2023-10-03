@@ -18,6 +18,7 @@ export class MemberMessagesComponent {
   username?: string
 
   messageContent = ''
+  loading = false
 
   @ViewChild('messageForm')
   messageForm?: NgForm
@@ -29,8 +30,13 @@ export class MemberMessagesComponent {
   sendMessage() {
     if (!this.username) return
 
-    this.messageService.sendMessage(this.username, this.messageContent).then(() => {
-      this.messageForm?.reset()
-    })
+    this.loading = true
+    this.messageService.sendMessage(this.username, this.messageContent)
+      .then(() => {
+        this.messageForm?.reset()
+      })
+      .finally(() => {
+        this.loading = false
+      })
   }
 }
