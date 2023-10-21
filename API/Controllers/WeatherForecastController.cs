@@ -4,13 +4,15 @@ namespace API.Controllers;
 
 public class WeatherForecastController : BaseApiController
 {
-    private static readonly string[] _summaries = new[]
+    private static readonly string[] Summaries = new[]
     {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
 
+
     public WeatherForecastController()
     {
+        
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
@@ -20,7 +22,7 @@ public class WeatherForecastController : BaseApiController
         {
             Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
             TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = _summaries[Random.Shared.Next(_summaries.Length)]
+            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
         })
         .ToArray();
     }

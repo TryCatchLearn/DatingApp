@@ -1,13 +1,13 @@
-﻿using API.Data;
+using API.Data;
 using API.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers;
-
-public class BuggyController : BaseApiController
+namespace API.Controllers
 {
-private readonly DataContext _context;
+    public class BuggyController : BaseApiController
+    {
+        private readonly DataContext _context;
         public BuggyController(DataContext context)
         {
             _context = context;
@@ -27,7 +27,7 @@ private readonly DataContext _context;
 
             if (thing == null) return NotFound();
 
-            return thing;
+            return Ok(thing);
         }
 
         [HttpGet("server-error")]
@@ -45,4 +45,5 @@ private readonly DataContext _context;
         {
             return BadRequest("This was not a good request");
         }
+    }
 }
