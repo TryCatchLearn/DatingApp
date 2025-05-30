@@ -14,7 +14,9 @@
 
         <nav class="flex gap-3 my-2 uppercase text-lg text-white">
             @if (accountService.currentUser()) {
-            <a routerLink="/members" routerLinkActive="text-accent">Matches</a>
+            <a routerLink="/members" routerLinkActive="text-accent" [routerLinkActiveOptions]="{exact: true}">
+                Matches
+            </a>
             <a routerLink="/lists" routerLinkActive="text-accent">Lists</a>
             <a routerLink="/messages" routerLinkActive="text-accent">Messages</a>
             }
@@ -22,10 +24,30 @@
 
         </nav>
         <div class="flex align-middle ml-auto gap-3">
+
+            <div class="dropdown mr-5 dropdown-end">
+                <button tabindex="1" class="flex flex-col justify-center align-middle 
+                    text-white cursor-pointer uppercase text-xs">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6 flex self-center">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-2.245c0-.399-.078-.78-.22-1.128Zm0 0a15.998 15.998 0 0 0 3.388-1.62m-5.043-.025a15.994 15.994 0 0 1 1.622-3.395m3.42 3.42a15.995 15.995 0 0 0 4.764-4.648l3.876-5.814a1.151 1.151 0 0 0-1.597-1.597L14.146 6.32a15.996 15.996 0 0 0-4.649 4.763m3.42 3.42a6.776 6.776 0 0 0-3.42-3.42" />
+                    </svg>
+                    <span>{{selectedTheme()}}</span>
+                </button>
+                <ul tabindex="1" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                    @for (theme of themes; track $index) {
+                        <li (click)="handleSelectTheme(theme)">
+                            <a>{{theme}}</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+
             @if (accountService.currentUser(); as user) {
             <div class="dropdown dropdown-end">
                 <div tabindex="0" role="button" class="flex items-center text-white text-xl gap-3 cursor-pointer">
-                    <img src="/user.png" alt="user avatar" class="w-8 h-8 rounded-full">
+                    <img [src]="user?.imageUrl || '/user.png'" alt="user avatar" class="w-10 h-10 rounded-full">
                     <span>{{user.displayName}}</span>
                 </div>
                 <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
