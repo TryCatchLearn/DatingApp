@@ -1,0 +1,40 @@
+<div class="flex w-full gap-6 min-h-100">
+    <div class="flex items-center gap-4 w-2/3">
+        <label 
+            (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)"
+            (drop)="onDrop($event)"
+            [class.border-purple-600]="isDragging"
+            [class.border-4]="isDragging"
+            [class.bg-purple-100]="isDragging"
+            for="dropzone-file"
+            class="flex flex-col items-center justify-center w-full border-2 border-gray-300 
+                h-full border-dashed rounded-lg cursor-pointer" 
+        >
+                <p class="mb-2 text-lg">Click to upload or drag and drop</p>
+                <input type="file" id="dropzone-file" class="hidden">
+        </label>
+    </div>
+    @if (imageSrc()) {
+    <div class="flex flex-col w-1/3 gap-3">
+        <div class="flex justify-center border-2 border-gray-300 rounded-lg">
+            <img src="{{imageSrc()}}" alt="image preview" 
+                class="aspect-square object-cover rounded-lg">
+        </div>
+        <div class="flex w-full gap-3">
+            <button (click)="onCancel()" class="btn flex-1">Cancel</button>
+            <button 
+                (click)="onUploadFile()" 
+                class="btn btn-primary flex-1"
+                [disabled]="loading()"
+            >
+                @if (loading()) {
+                    <span class="loading loading-spinner"></span>
+                }
+                Upload image
+            </button>
+        </div>
+    </div>
+    }
+
+</div>
