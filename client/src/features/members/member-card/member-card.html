@@ -1,10 +1,20 @@
 @if (member(); as member) {
-<div routerLink="/members/{{member.id}}" 
-    class="card cursor-pointer transition-all duration-300 ease-in-out 
-        transform hover:-translate-y-2">
+<div routerLink="/members/{{member.id}}" class="card cursor-pointer transition-all duration-300 ease-in-out 
+        transform hover:-translate-y-2 relative">
     <img src="{{member?.imageUrl || '/user.png'}}" alt="{{member.displayName}} image" class="rounded-lg">
-    <div 
-        class="card-actions z-40 
+    <button (click)="toggleLike($event)" class="absolute top-1 right-1 z-40 btn btn-ghost btn-circle">
+        <svg xmlns="http://www.w3.org/2000/svg" 
+            [attr.fill]="hasLiked() ? 'red' : 'none'" 
+            viewBox="0 0 24 24" 
+            stroke-width="1.5" 
+            stroke="currentColor"
+            class="size-7"
+        >
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+        </svg>
+    </button>
+    <div class="card-actions z-40 
             absolute bottom-0 w-full px-3 py-1 rounded-b-lg
             bg-gradient-to-t from-black via-black/75 to-black/0
         ">
