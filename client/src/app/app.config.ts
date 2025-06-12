@@ -20,7 +20,7 @@ export const appConfig: ApplicationConfig = {
       return new Promise<void>((resolve) => {
         setTimeout(async () => {
           try {
-            return lastValueFrom(initService.init());
+            await lastValueFrom(initService.init());
           } finally {
             const splash = document.getElementById('initial-splash');
             if (splash) {
@@ -30,8 +30,6 @@ export const appConfig: ApplicationConfig = {
           }
         }, 500)
       })
-
-
     })
   ]
 };
