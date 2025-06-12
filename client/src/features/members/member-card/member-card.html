@@ -2,6 +2,11 @@
 <div routerLink="/members/{{member.id}}" class="card cursor-pointer transition-all duration-300 ease-in-out 
         transform hover:-translate-y-2 relative">
     <img src="{{member?.imageUrl || '/user.png'}}" alt="{{member.displayName}} image" class="rounded-lg">
+    
+    @if (isOnline()) {
+        <span class="status status-success status-xl absolute top-3 left-3"></span>
+    }
+    
     <button (click)="toggleLike($event)" class="absolute top-1 right-1 z-40 btn btn-ghost btn-circle">
         <svg xmlns="http://www.w3.org/2000/svg" 
             [attr.fill]="hasLiked() ? 'red' : 'none'" 
