@@ -43,7 +43,7 @@
         <td class="truncate w-4/9">{{message.content}}</td>
         <td class="w-2/9">{{message.messageSent | date: 'medium'}}</td>
         <td class="w-1/9">
-          <button (click)="deleteMessage($event, message.id)" class="btn btn-circle btn-ghost text-error">
+          <button (click)="confirmDelete($event, message.id)" class="btn btn-circle btn-ghost text-error">
             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="size-6">
               <path stroke-linecap="round" stroke-linejoin="round"

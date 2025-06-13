@@ -18,44 +18,44 @@ export class AccountService {
   private baseUrl = environment.apiUrl;
 
   register(creds: RegisterCreds) {
-    return this.http.post<User>(this.baseUrl + 'account/register', creds, 
-        {withCredentials: true}).pipe(
-      tap(user => {
-        if (user) {
-          this.setCurrentUser(user);
-          this.startTokenRefreshInterval();
-        }
-      })
-    )
+    return this.http.post<User>(this.baseUrl + 'account/register', creds,
+      { withCredentials: true }).pipe(
+        tap(user => {
+          if (user) {
+            this.setCurrentUser(user);
+            this.startTokenRefreshInterval();
+          }
+        })
+      )
   }
 
   login(creds: LoginCreds) {
-    return this.http.post<User>(this.baseUrl + 'account/login', creds, 
-        {withCredentials: true}).pipe(
-      tap(user => {
-        if (user) {
-          this.setCurrentUser(user);
-          this.startTokenRefreshInterval();
-        }
-      })
-    )
+    return this.http.post<User>(this.baseUrl + 'account/login', creds,
+      { withCredentials: true }).pipe(
+        tap(user => {
+          if (user) {
+            this.setCurrentUser(user);
+            this.startTokenRefreshInterval();
+          }
+        })
+      )
   }
 
   refreshToken() {
-    return this.http.post<User>(this.baseUrl + 'account/refresh-token', {}, 
-      {withCredentials: true})
+    return this.http.post<User>(this.baseUrl + 'account/refresh-token', {},
+      { withCredentials: true })
   }
 
   startTokenRefreshInterval() {
     setInterval(() => {
-      this.http.post<User>(this.baseUrl + 'account/refresh-token', {}, 
-        {withCredentials: true}).subscribe({
+      this.http.post<User>(this.baseUrl + 'account/refresh-token', {},
+        { withCredentials: true }).subscribe({
           next: user => {
             this.setCurrentUser(user)
           },
           error: () => {
             this.logout()
-          } 
+          }
         })
     }, 5 * 60 * 1000)
   }
@@ -70,10 +70,15 @@ export class AccountService {
   }
 
   logout() {
-    localStorage.removeItem('filters');
-    this.likesService.clearLikeIds();
-    this.currentUser.set(null);
-    this.presenceService.stopHubConnection();
+    this.http.post(this.baseUrl + 'account/logout', {}, { withCredentials: true }).subscribe({
+      next: () => {
+        localStorage.removeItem('filters');
+        this.likesService.clearLikeIds();
+        this.currentUser.set(null);
+        this.presenceService.stopHubConnection();
+      }
+    })
+
   }
 
   private getRolesFromToken(user: User): string[] {
