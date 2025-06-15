@@ -1,1 +1,12 @@
-<p>photo-management works!</p>
+<div class='grid grid-cols-6 gap-4'>
+    @for (photo of photos(); track photo.id) {
+        <div>
+            <img src='{{photo.url}}' class='img-thumbnail p-1' alt='user image'>
+    
+            <div class='flex w-full gap-3'>
+                <button class='btn btn-success flex-grow' (click)='approvePhoto(photo.id)'>Approve</button>
+                <button class='btn btn-error flex-grow' (click)='rejectPhoto(photo.id)'>Reject</button>
+            </div>
+        </div>
+    }
+</div>
