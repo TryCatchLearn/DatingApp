@@ -13,10 +13,6 @@ export class Paginator {
   totalPages = input(0);
   pageSizeOptions = input([5, 10, 20, 50]);
 
-  constructor() {
-    console.log(this.pageNumber());
-  }
-
   pageChange = output<{pageNumber: number, pageSize: number}>();
 
   lastItemIndex = computed(() => {

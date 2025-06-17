@@ -6,7 +6,7 @@
             (drop)="onDrop($event)"
             [class.border-purple-600]="isDragging"
             [class.border-4]="isDragging"
-            [class.bg-purple-100]="isDragging"
+            [class]="isDragging ? 'bg-secondary/5' : ''"
             for="dropzone-file"
             class="flex flex-col items-center justify-center w-full border-2 border-gray-300 
                 h-full border-dashed rounded-lg cursor-pointer" 
