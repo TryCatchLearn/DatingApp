@@ -38,6 +38,10 @@ export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
     invalidateCache('/messages')
   }
 
+  if (req.method.includes('POST') && req.url.includes('/add-photo')) {
+    invalidateCache('/photos')
+  }
+
   if (req.method.includes('POST') && req.url.includes('/logout')) {
     cache.clear();
   }

@@ -81,6 +81,12 @@ namespace API.Controllers
                 IsApproved = true
             };
 
+            if (member.ImageUrl == null)
+            {
+                member.ImageUrl = photo.Url;
+                member.User.ImageUrl = photo.Url;
+            }
+
             member.Photos.Add(photo);
 
             if (await uow.Complete()) return photo;

@@ -8,7 +8,7 @@
                 <div class="flex text-2xl text-primary items-center">
                     {{member.displayName}}, {{member.dateOfBirth | age}}
                     @if (presenceService.onlineUsers().includes(member.id)) {
-                        <span class="status status-success status-xl ml-3"></span>
+                    <span class="status status-success status-xl ml-3"></span>
                     }
                 </div>
 
@@ -22,17 +22,16 @@
             <ul class="menu rounded-box w-full text-xl">
                 <li><a routerLink="profile" routerLinkActive="text-primary">Profile</a></li>
                 <li><a routerLink="photos" routerLinkActive="text-primary">Photos</a></li>
+                @if (!isCurrentUser()) {
                 <li><a routerLink="messages" routerLinkActive="text-primary">Messages</a></li>
+                }
             </ul>
         </div>
         <div class="card-actions justify-between gap-2 px-2 mb-3">
             <button routerLink="/members" class="btn btn-info flex-1">Go back</button>
-            <button 
-                (click)="likesService.toggleLike(member.id)"
-                [class.btn-error]="hasLiked()"
-                [class.btn-success]="!hasLiked()"
-                class="btn flex-1"
-            >{{hasLiked() ? 'Remove like' : 'Like user'}}</button>
+            <button (click)="likesService.toggleLike(member.id)" [class.btn-error]="hasLiked()"
+                [class.btn-success]="!hasLiked()" class="btn flex-1">{{hasLiked() ? 'Remove like' : 'Like
+                user'}}</button>
         </div>
     </div>
 
@@ -40,11 +39,9 @@
         <div class="flex justify-between items-center">
             <h3 class="card-title text-3xl text-primary">{{title()}}</h3>
             @if (isCurrentUser()) {
-                <button 
-                    (click)="memberService.editMode.set(!memberService.editMode())"
-                    class="btn btn-outline btn-primary">
-                    {{memberService.editMode() ? 'Cancel' : 'Edit'}}
-                </button>
+            <button (click)="memberService.editMode.set(!memberService.editMode())" class="btn btn-outline btn-primary">
+                {{memberService.editMode() ? 'Cancel' : 'Edit'}}
+            </button>
             }
         </div>
 
